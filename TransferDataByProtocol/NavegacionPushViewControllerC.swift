@@ -7,36 +7,36 @@
 
 import UIKit
 
-class NavegacionPushViewControllerC: UIViewController {
 
-    private lazy var swiftbetaButton: UIButton = {
-        var configuration = UIButton.Configuration.bordered()
-        configuration.title = "¡Suscríbete a SwiftBeta!"
-        
-        let button = UIButton(type: .system, primaryAction: UIAction(handler: { _ in
-            self.startNavigation()
-        }))
-        button.configuration = configuration
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+class NavegacionPushViewControllerC: UIViewController, NavegacionPushViewControllerBDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .orange
-        title = "View Controller C"
-        view.addSubview(swiftbetaButton)
+        view.backgroundColor = .white
+        title = "VC C"
         
-        NSLayoutConstraint.activate([
-            swiftbetaButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            swiftbetaButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Ir a B",
+                                                                 style: .done,
+                                                                 target: self,
+                                                                 action: #selector(goToVCB))
     }
     
-    func startNavigation() {
-        //self.navigationController?.popViewController(animated: true)
-        self.present(NavegacionPushViewControllerD(),
-                     animated: true)
+    // Implementación del método del protocolo para recibir el nuevo título
+    func didUpdateTitle(_ newTitle: String) {
+        self.title = newTitle
+        print("Nuevo título recibido en VC C: \(newTitle)")
+    }
+    
+    @objc
+    private func goToVCB() {
+        // Crear una instancia de `NavegacionPushViewControllerB`
+        let vcB = NavegacionPushViewControllerB()
+        
+        // Asignar `self` como delegado de `vcB`
+        vcB.delegate = self
+        
+        // Navegar a `vcB`
+        self.navigationController?.pushViewController(vcB, animated: true)
     }
 }
